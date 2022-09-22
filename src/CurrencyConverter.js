@@ -2,6 +2,7 @@
 import React from 'react';
 import currencies from './utils/currencies.js';
 import { checkStatus, json } from './utils/fetchUtils';
+import Chart from 'chart.js';
 
 class CurrencyConverter extends React.Component {
   constructor(props) {
@@ -16,11 +17,58 @@ class CurrencyConverter extends React.Component {
       loading: false,
     };
 
+    this.chartRef = React.createRef();
+
   }
 
   componentDidMount () {
     const { baseCurrency, quoteCurrency } = this.state;
     this.getRate(baseCurrency, quoteCurrency);
+    this.getHistoricalRates(baseCurrency, quoteCurrency);
+  }
+
+  getHistoricalRates = (base, quote) => {
+    const endDate = new Date().toISOString().split('T')[0];
+    const startDate = new Date((new Date).getTime() - (30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
+
+    fetch(`https://api.frankfurter.app/${startDate}..${endDate}?from=${base}&to=${quote}`)
+    .then(checkStatus)
+    .then(json)
+    .then((data) => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      const chartLabels = Object.keys(data.rates);
+      const chartData = Object.values(data.rates).map(rate => rate[quote]);
+      const chartLabel = `${base}/${quote}`;
+      this.buildChart(chartLabels, chartData, chartLabel);
+    })
+    .catch(error => console.error(error.message))
+  }
+
+  buildChart = (labels, data, label) => {
+    const chartRef = this.chartRef.current.getContext("2d");
+    if (typeof this.chart !== "undefined") {
+      this.chart.destroy();
+    }
+    this.chart = new Chart(this.chartRef.current.getContext("2d"), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: label,
+            data,
+            fill: false,
+            tension: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+      }
+    })
   }
 
   getRate = (base, quote) => {
@@ -62,6 +110,7 @@ class CurrencyConverter extends React.Component {
     const baseCurrency = event.target.value;
     this.setState({ baseCurrency });
     this.getRate(baseCurrency, this.state.quoteCurrency);
+    this.getHistoricalRates(baseCurrency, this.state.quoteCurrency);
   }
 
   changeBaseValue = (event) => {
@@ -76,6 +125,7 @@ class CurrencyConverter extends React.Component {
     const quoteCurrency = event.target.value;
     this.setState({ quoteCurrency: event.target.value });
     this.getRate(this.state.baseCurrency, quoteCurrency);
+    this.getHistoricalRates(this.state.baseCurrency, quoteCurrency);
   }
 
   changeQuoteValue = (event) => {
@@ -125,6 +175,7 @@ class CurrencyConverter extends React.Component {
               </div>
             </div>
           </div>
+          <canvas ref={this.chartRef}/>
         </div>
       </>
     )
