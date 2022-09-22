@@ -7,13 +7,11 @@ class CurrencyConverter extends React.Component {
   constructor(props) {
     super(props);
 
-    const params = new URLSearchParams(props.location.search)
-
     this.state = {
       rate: 0,
-      baseCurrency: params.get('base') || 'USD',
+      baseCurrency:'USD',
       baseValue: 1,
-      quoteCurrency: params.get('quote') || 'JPY',
+      quoteCurrency:'JPY',
       quoteValue: 0,
       loading: false,
     };
@@ -101,7 +99,7 @@ class CurrencyConverter extends React.Component {
           <div className='form-container mb-3 mt-3'>
             <div className='row'>
               <div className='col-5 ps-5 pe-5'>
-                <select className='p-2 mb-2 text-center currency-group' value={baseCurrency} onChange={this.changebaseCurrency}>
+                <select className='p-2 mb-2 text-center currency-group' value={baseCurrency} onChange={this.changebaseCurrency} disabled={loading}>
                   {currencyOptions}
                 </select>
                 <div className='input-group'>
@@ -115,7 +113,7 @@ class CurrencyConverter extends React.Component {
                 <h1> = </h1>
               </div>
               <div className='col-5'>
-                <select className='p-2 mb-2 currency-group text-center' value={quoteCurrency} onChange={this.changequoteCurrency}>
+                <select className='p-2 mb-2 currency-group text-center' value={quoteCurrency} onChange={this.changequoteCurrency} disabled={loading}>
                   {currencyOptions}
                 </select>
                 <div className='input-group'>

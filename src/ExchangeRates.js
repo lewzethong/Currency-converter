@@ -56,8 +56,8 @@ class ExchangeRates extends React.Component {
       <>
         <form className="p-3 bg-light form-inline justify-content-center my-3">
           <h3 className="mb-2">Base currency: <b className="mr-2">1</b></h3>
-          <select value={base} onChange={this.changeBase} className="form-control form-control-lg mb-2" disabled={loading}>
-            {Object.keys(currencies).map(currencyAcronym => <option key={currencyAcronym} value={currencyAcronym}>{currencyAcronym}</option>)}
+          <select value={base} onChange={this.changeBase} className="form-control form-control-lg text-center mb-2" disabled={loading}>
+            {Object.keys(currencies).map(currencyAcronym => <option key={currencyAcronym} value={currencyAcronym}>{currencyAcronym} - {currencies[currencyAcronym].name}</option>)}
           </select>
           <div className='exchange-rate-table p-3 align-items-left border'>
             <div className='row'>
