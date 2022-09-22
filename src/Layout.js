@@ -1,23 +1,25 @@
 import React from 'react';
-import linkedin_img from "./images/linkedin.svg"
-import github_img from "./images/square-github.svg"
+import linkedin_img from "./images/linkedin.svg";
+import github_img from "./images/square-github.svg";
+import { Link } from "react-router-dom";
 
 const Layout = (props) => {
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
         <div className="container-fluid">
-          <a className="navbar-brand flex-fill ps-3" href="#">Home</a>
+          <Link to={'/'} className="navbar-brand flex-fill ps-3">Home</Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse flex-row-reverse pe-3" id="navbarSupportedContent">
             <ul className="navbar-nav mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active ps-3" aria-current="page" href="#">Currency Conversion</a>
+                <Link to={'/currencyconverter'} className="nav-link">Currency Converter</Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link ps-3" href="#">Exchange Rates</a>
+                <Link to={'/exchangerates'} className="nav-link">ExchangeRates</Link>
+
               </li>
             </ul>
           </div>
